@@ -1,0 +1,180 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StockMaster Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+    </style>
+    <script>
+        // Supprimer les erreurs d'autofill des extensions de navigateur
+        (function() {
+            // Intercepter console.error
+            const originalConsoleError = console.error;
+            console.error = function(...args) {
+                const message = args.join(' ');
+                if (
+                    message.includes('insertBefore') ||
+                    message.includes('bootstrap-autofill') ||
+                    message.includes('autofill-overlay') ||
+                    message.includes('NotFoundError') ||
+                    message.includes('Failed to execute') ||
+                    message.includes('AutofillInlineMenuContentService') ||
+                    message.includes('kwift.CHROME') ||
+                    message.includes('Dashlane') ||
+                    message.includes('isLoginFormAutofilledByDashlane') ||
+                    message.includes('Cannot convert undefined or null to object')
+                ) {
+                    return; // Ignorer ces erreurs
+                }
+                originalConsoleError.apply(console, args);
+            };
+
+            // Gestionnaire d'erreurs global
+            window.addEventListener('error', function(e) {
+                if (
+                    e.message && (
+                        e.message.includes('insertBefore') ||
+                        e.message.includes('bootstrap-autofill') ||
+                        e.message.includes('autofill-overlay') ||
+                        e.message.includes('NotFoundError') ||
+                        e.message.includes('Failed to execute') ||
+                        e.message.includes('AutofillInlineMenuContentService') ||
+                        e.message.includes('kwift.CHROME') ||
+                        e.message.includes('Dashlane') ||
+                        e.message.includes('isLoginFormAutofilledByDashlane') ||
+                        e.message.includes('Cannot convert undefined or null to object')
+                    )
+                ) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    e.stopImmediatePropagation();
+                    return false;
+                }
+            }, true);
+
+            // Gestionnaire de promesses rejetées
+            window.addEventListener('unhandledrejection', function(e) {
+                const reason = e.reason;
+                const message = reason?.message || reason?.toString() || '';
+                if (
+                    message.includes('insertBefore') ||
+                    message.includes('bootstrap-autofill') ||
+                    message.includes('autofill-overlay') ||
+                    message.includes('NotFoundError') ||
+                    message.includes('Failed to execute') ||
+                    message.includes('AutofillInlineMenuContentService') ||
+                    message.includes('kwift.CHROME') ||
+                    message.includes('Dashlane') ||
+                    message.includes('isLoginFormAutofilledByDashlane') ||
+                    message.includes('Cannot convert undefined or null to object')
+                ) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    return false;
+                }
+            }, true);
+
+            // Fonction pour supprimer les éléments d'autofill
+            const removeAutofillElements = function() {
+                try {
+                    // Supprimer tous les éléments d'autofill overlay
+                    const selectors = [
+                        '[class*="autofill"]',
+                        '[id*="autofill"]',
+                        '[class*="bootstrap-autofill"]',
+                        '.autofill-overlay',
+                        '[data-autofill]'
+                    ];
+                    selectors.forEach(function(selector) {
+                        try {
+                            document.querySelectorAll(selector).forEach(function(el) {
+                                try {
+                                    el.remove();
+                                } catch (e) {
+                                    // Ignorer
+                                }
+                            });
+                        } catch (e) {
+                            // Ignorer
+                        }
+                    });
+                } catch (e) {
+                    // Ignorer
+                }
+            };
+
+            // Intercepter les mutations DOM qui pourraient causer des problèmes
+            if (window.MutationObserver) {
+                const observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        if (mutation.type === 'childList') {
+                            mutation.addedNodes.forEach(function(node) {
+                                if (node.nodeType === 1) {
+                                    const element = node;
+                                    // Supprimer les éléments d'autofill overlay
+                                    if (
+                                        (element.classList && (
+                                            element.classList.contains('autofill-overlay') ||
+                                            Array.from(element.classList).some(function(c) { return c.includes('autofill'); })
+                                        )) ||
+                                        (element.id && element.id.includes('autofill')) ||
+                                        (element.className && typeof element.className === 'string' && element.className.includes('autofill'))
+                                    ) {
+                                        try {
+                                            element.remove();
+                                        } catch (e) {
+                                            // Ignorer les erreurs de suppression
+                                        }
+                                    }
+                                }
+                            });
+                        }
+                    });
+                    // Nettoyer périodiquement
+                    removeAutofillElements();
+                });
+
+                // Démarrer l'observation une fois le DOM prêt
+                const startObserver = function() {
+                    if (document.body) {
+                        observer.observe(document.body, {
+                            childList: true,
+                            subtree: true
+                        });
+                        removeAutofillElements();
+                    } else {
+                        setTimeout(startObserver, 100);
+                    }
+                };
+                startObserver();
+
+                // Nettoyer périodiquement
+                setInterval(removeAutofillElements, 1000);
+            }
+        })();
+    </script>
+
+<link rel="icon" href="data:,">
+<script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "@google/genai": "https://esm.sh/@google/genai@^1.37.0",
+    "recharts": "https://esm.sh/recharts@^3.6.0"
+  }
+}
+</script>
+  <script type="module" crossorigin src="/assets/index-DkZJtPkm.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-900" data-1p-ignore="true" data-lpignore="true">
+    <div id="root" data-1p-ignore="true" data-lpignore="true"></div>
+</body>
+</html>

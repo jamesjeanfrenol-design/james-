@@ -1,0 +1,16 @@
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION BEGIN
+PassengerAppRoot "/home/dretfpdi/domains/shop.dretfp-diana.mg/public_html/backend"
+PassengerBaseURI "/backend"
+PassengerNodejs "/home/dretfpdi/nodevenv/domains/shop.dretfp-diana.mg/public_html/backend/18/bin/node"
+PassengerAppType node
+PassengerStartupFile dist/app.js
+# DO NOT REMOVE. CLOUDLINUX PASSENGER CONFIGURATION END
+# DO NOT REMOVE OR MODIFY. CLOUDLINUX ENV VARS CONFIGURATION BEGIN
+<IfModule Litespeed>
+SetEnv DB_NAME dretfpdi_marohavagna
+SetEnv DB_PASSWORD uKUXGNk2mSaHnLzCJ84P
+SetEnv DB_PORT 3306
+SetEnv DB_USER dretfpdi_marohavagna
+SetEnv JWT_SECRET 9duthjo+jP6bXRL53IRr8RHn4MZoaNJ2+wKbbeHY67k=
+</IfModule>
+# DO NOT REMOVE OR MODIFY. CLOUDLINUX ENV VARS CONFIGURATION END
